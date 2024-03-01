@@ -13,7 +13,7 @@ Description : API Usage.
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student and Courses</title>
-	<style>
+    <style>
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -32,10 +32,10 @@ Description : API Usage.
             border-radius: 4px;
             cursor: pointer;
             transition: background-color 0.3s;
-			display: block; /* Use block display */
-			width: max-content; /* Width as per content */
-			width: -moz-max-content; /* For Mozilla */
-			width: -webkit-max-content; /* For Webkit */
+            display: block; /* Use block display */
+            width: max-content; /* Width as per content */
+            width: -moz-max-content; /* For Mozilla */
+            width: -webkit-max-content; /* For Webkit */
         }
         li:hover {
             background-color: #ddd;
@@ -47,12 +47,37 @@ Description : API Usage.
     <script>
         // Function to fetch and display students
         async function fetchStudents() {
-            
+            try {
+                const response = await fetch('https://65dd058be7edadead7ed535e.mockapi.io/students');
+                const students = await response.json();
+                const studentList = document.getElementById('studentList');
+                studentList.innerHTML = ''; // Clear existing list
+                students.forEach(student => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = student.name;
+                    listItem.onclick = () => fetchCourses(student.id);
+                    studentList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error fetching students:', error);
+            }
         }
 
         // Function to fetch and display courses for a student
         async function fetchCourses(studentId) {
-            
+            try {
+                const response = await fetch(`https://65dd058be7edadead7ed535e.mockapi.io/students/${studentId}/courses`);
+                const courses = await response.json();
+                const courseList = document.getElementById('courseList');
+                courseList.innerHTML = ''; // Clear existing list
+                courses.forEach(course => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `${course.name} (Unit: ${course.unit})`;
+                    courseList.appendChild(listItem);
+                });
+            } catch (error) {
+                console.error('Error fetching courses:', error);
+            }
         }
 
         // Fetch students on window load
